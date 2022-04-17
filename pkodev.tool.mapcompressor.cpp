@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <iomanip>
 #include <string>
 #include <fstream>
 #include <vector>
@@ -274,7 +275,7 @@ int main(int argc, char *argv[])
 						);
 
 						// Check that current tile is empty
-						if ((sRegion & 0x0001) || (btTileInfo != 0))
+						if ( (btTileInfo != 0) || ((sRegion & 0x0001) || (sRegion & 0x0008)) )
 						{
 							// The tile is not empty
 							empty = false;
@@ -329,6 +330,12 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	// Close the input .map file
+	in.close();
+
+	// Close the output .map file
+	out.close();
+
 	// Calculate some statistics
 	const float percentage = (static_cast<float>(empty_counter) / static_cast<float>(section_num)) * 100.0f;
 	const unsigned int bytes = (empty_counter * pkodev::section_size);
@@ -336,14 +343,8 @@ int main(int argc, char *argv[])
 	// Print statistics
 	std::cout << "Done!" << std::endl;
 	std::cout << "* Sections compressed: " << empty_counter << std::endl;
-	std::cout << "* Percentage: " << percentage << "%" << std::endl;
+	std::cout << std::setprecision(2) << "* Percentage: " << percentage << "%" << std::endl;
 	std::cout << "* Bytes freed: " << bytes << std::endl;
-
-	// Close the input .map file
-	in.close();
-	
-	// Close the output .map file
-	out.close();
 
 	return 0;
 }
